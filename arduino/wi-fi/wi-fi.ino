@@ -1,8 +1,11 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
+#include <SoftwareSerial.h>
 
-const char* ssid = "XXX";
-const char* password = "XXX";
+SoftwareSerial arduinoSerial(D1, D2); // RX sur D2, TX sur D3
+
+const char* ssid = "AndroidAP3880";
+const char* password = "chat3181";
 
 const char* mqtt_server = "192.168.233.7";
 const char* mqtt_user = "admin";
@@ -24,6 +27,7 @@ void setup_wifi() {
 
 void setup() {
   Serial.begin(115200);
+  arduinoSerial.begin(9600);
   
   setup_wifi();
   
@@ -52,9 +56,9 @@ void loop() {
     client.publish("iot/status", "I'm up !");
     Serial.println("Message send.");
 
-    if (Serial.available()) {
-      String data = Serial.readString();
-      Serial.print("Données reçues !");
+    if (arduinoSerial.available()) {
+      String data = arduinoSerial.readString();
+      arduinoSerial.print("Données reçues !");
       client.publish("iot/sensors", data.c_str());
     }
   }
