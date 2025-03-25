@@ -5,12 +5,16 @@
 #define GREEN 5
 #define BLUE 6
 
+#include <SoftwareSerial.h>
+
+SoftwareSerial arduinoSerial(2, 3); // RX sur D2, TX sur D3
 int sol;
 int air;
 int lux;
 
 void setup() {
-  Serial.begin(9600);
+  Serial.begin(115200);
+  arduinoSerial.begin(9600);   // Communication avec l'ESP8266
   
   pinMode(solPin, INPUT);
   pinMode(airPin, INPUT);
@@ -35,21 +39,23 @@ void loop() {
    analogWrite(BLUE, 255);
    analogWrite(GREEN, 255);
    
-   float calc = ((float)sol / 1023) * 100;
+   float calc_sol = ((float)sol / 1023) * 100;
    Serial.print("sol = ");
-   Serial.print(calc); // afficher pourcentage
+   Serial.print(calc_sol); // afficher pourcentage
    Serial.print("% | Val = ");
    Serial.println(sol); // afficher variable
-   calc = ((float)air / 1023) * 100;
+   float calc_air = ((float)air / 1023) * 100;
    Serial.print("air = ");
-   Serial.print(calc); // afficher pourcentage
+   Serial.print(calc_air); // afficher pourcentage
    Serial.print("% | Val = ");
    Serial.println(air); // afficher pourcentage
-   calc = ((float)lux / 1023) * 100;
+   float calc_lux = ((float)lux / 1023) * 100;
    Serial.print("lux = ");
-   Serial.print(calc); // afficher pourcentage
+   Serial.print(calc_lux); // afficher pourcentage
    Serial.print("% | Val = ");
    Serial.println(lux); // afficher pourcentage
+
+   arduinoSerial.println("[{\"device\": \"raspberry_device\",\"data\": {\"lux\": "+ String(calc_lux) +",\"humidity_air\": "+ String(calc_air) +",\"humidity_sol\": "+ String(calc_sol) +"}}]");
 
    delay(1000);
 }
