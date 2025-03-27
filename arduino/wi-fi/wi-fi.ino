@@ -1,11 +1,12 @@
 #include <ESP8266WiFi.h>
 #include <PubSubClient.h>
 #include <SoftwareSerial.h>
+#include <vector>
 
 SoftwareSerial arduinoSerial(D1, D2); // RX sur D2, TX sur D3
 
-const char* ssid = "AndroidAP3880";
-const char* password = "chat3181";
+const char* ssid = "XXX";
+const char* password = "XXX";
 
 const char* mqtt_server = "192.168.233.7";
 const char* mqtt_user = "admin";
@@ -26,8 +27,8 @@ void setup_wifi() {
 }
 
 void setup() {
-  Serial.begin(115200);
-  arduinoSerial.begin(9600);
+  Serial.begin(115200); // Debug
+  arduinoSerial.begin(4800);  // Communication avec Arduino
   
   setup_wifi();
   
@@ -50,16 +51,23 @@ void loop() {
   }
   
   client.loop();
+  
   static unsigned long lastMsg = 0;
-  if((millis() - lastMsg) > 5000) {
+  if ((millis() - lastMsg) > 5000) {
     lastMsg = millis();
     client.publish("iot/status", "I'm up !");
-    Serial.println("Message send.");
+    Serial.println("Message sent.");
 
+    // Lire les données de l'Arduino proprement
     if (arduinoSerial.available()) {
-      String data = arduinoSerial.readString();
-      arduinoSerial.print("Données reçues !");
-      client.publish("iot/sensors", data.c_str());
+      String data = arduinoSerial.readStringUntil('\n'); // Lire jusqu'à un retour à la ligne
+      data.trim(); // Nettoyer les espaces vides et caractères parasites
+      
+      if (data.length() > 0) {
+        data = data.substring(64);
+        Serial.println("Données reçues : " + data);
+        client.publish("iot/sensors", data.c_str());
+      }
     }
   }
 }
