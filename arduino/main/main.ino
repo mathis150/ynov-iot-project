@@ -1,9 +1,9 @@
 #define solPin A1
 #define airPin A2
 #define luxPin A3
-#define RED 3
-#define GREEN 5
-#define BLUE 6
+#define RED 5
+#define GREEN 6
+#define BLUE 9
 
 #include <SoftwareSerial.h>
 
