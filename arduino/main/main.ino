@@ -66,10 +66,10 @@ void loop() {
    float calc_gaz = ((float)gaz / 1023) * 100;
    float calc_temp = ((3950.0 / (log(resistance / 100000.0) + (3950.0 / 298.15))) - 273.15) * -1;
 
-   if(calc_gaz < 25) {
-     analogWrite(RED, 255);
-     analogWrite(BLUE, 255);
-     analogWrite(GREEN, 255);
+   if(calc_lux < 25) {
+     analogWrite(RED, 100);
+     analogWrite(BLUE, 100);
+     analogWrite(GREEN, 100);
    } else {
      analogWrite(RED, 0);
      analogWrite(BLUE, 0);
@@ -109,8 +109,9 @@ void loop() {
    String jsonData = "{\"device\": \"raspberry_device\", \"data\": {";
    jsonData += "\"lux\": " + String(calc_lux, 2) + ",";
    jsonData += "\"humidity_air\": " + String(calc_air, 2) + ",";
-   jsonData += "\"humidity_sol\": " + String(calc_sol, 2);
-   jsonData += "\"gaz\": " + String(calc_gaz, 2);
+   jsonData += "\"humidity_sol\": " + String(calc_sol, 2) + ",";
+   jsonData += "\"gaz\": " + String(calc_gaz, 2) + ",";
+   jsonData += "\"thermal\": " + String(calc_temp, 2);
    jsonData += "}}";
 
    // Affichage pour le debug
