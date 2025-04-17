@@ -1,5 +1,5 @@
-#define solPin A1
-#define airPin A2
+#define airPin A1
+#define solPin A2
 #define luxPin A3
 #define gazPin A4
 #define thermaPin A5
