@@ -48,6 +48,7 @@ def on_message(client, userdata, msg):
         payload = clean_json(raw_payload)
         if payload:
             print(f"Message décodé: {payload}")
+            data_buffer.clear()
             data_buffer.append(payload)
         else:
             print("Échec de la décodification du message JSON.")
