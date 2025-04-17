@@ -27,11 +27,13 @@
             "device": "device_ynov",
             "data": {
                 "temperature": 25,
-                "humidity": 50
+                "humidity": 50,
+                "date": time
             },
             "monitoring": {
                 "temperature": 30,
                 "humidity": 40
+                "date": time
             }
         }
     ]
@@ -65,7 +67,10 @@
                         $create = $database->db->prepare('INSERT INTO devices (name, status, ip) VALUES (?, ?, ?)');
                         $create->execute(array($values['device'], 1, (!empty($_SERVER['HTTP_CLIENT_IP'])) ? $_SERVER['HTTP_CLIENT_IP'] : $_SERVER['REMOTE_ADDR']));
                         $response = array('error' => 'Created.');
-                    }
+                    } /*else {
+                        $update = $database->db->prepare('UPDATE device SET last_activity = ? WHERE name = ?');
+                        $update->execute(array(date('Y-m-d H:i:s'), $values['device']));
+                    }*/
                 }
             } else {
                 $response = array('error' => 'No data provided');
