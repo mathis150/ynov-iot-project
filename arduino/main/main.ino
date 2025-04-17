@@ -6,6 +6,7 @@
 
 #define RED 5
 #define GREEN 6
+#define POMPE 7
 #define BLUE 9
 
 #define SERIES_RESISTOR 100000.0  // Résistance fixe de 100 kΩ
@@ -16,6 +17,8 @@
 #define C 0.0000002041094
 
 #include <SoftwareSerial.h>
+
+bool pompeActive = false;
 
 SoftwareSerial arduinoSerial(2, 3); // RX sur D2, TX sur D3
 int sol;
@@ -37,10 +40,12 @@ void setup() {
   pinMode(RED, OUTPUT);
   pinMode(GREEN, OUTPUT);
   pinMode(BLUE, OUTPUT);
+  pinMode(POMPE, OUTPUT);
   
   digitalWrite(RED, HIGH);
   digitalWrite(GREEN, HIGH);
   digitalWrite(BLUE, HIGH);
+  digitalWrite(POMPE, LOW);
   
   analogWrite(RED, 0);
   analogWrite(BLUE, 0);
@@ -113,6 +118,16 @@ void loop() {
    jsonData += "\"gaz\": " + String(calc_gaz, 2) + ",";
    jsonData += "\"thermal\": " + String(calc_temp, 2);
    jsonData += "}}";
+
+   if(calc_sol <= 35 && !pompeActive) {
+    pompeActive = true;
+    digitalWrite(POMPE, HIGH);
+   Serial.println("Pompage...");
+   } else if(calc_sol >= 45 && pompeActive) {
+    pompeActive = false;
+    digitalWrite(POMPE, LOW);
+   Serial.println("Pompage désactivé...");
+   }
 
    // Affichage pour le debug
    Serial.println("Envoi JSON: " + jsonData);
