@@ -62,3 +62,8 @@ $ sudo systemctl reload apache2
 
 ## Après tout ça, comment accéder au panneau ?
 > `<Ton url>/index.php`
+
+## Informations importantes :
+- Pour permettre le bon fonctionnement de tout, le même réseau est nécessaire.
+- Le seul élément pas obligatoire est le site web, qui peut être dans le cloud, donc : Accès à internet obligatoire pour le réseau local du système.
+- Il est important de définir des adresses ip qui ne change **JAMAIS**, sans ça, le programme pourrait ne jamais fonctionner.
